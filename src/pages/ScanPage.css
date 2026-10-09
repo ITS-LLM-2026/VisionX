@@ -1,0 +1,156 @@
+.scan-page-root {
+  min-height: 100vh;
+  background-color: var(--paper);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header Bar */
+.scan-header-bar {
+  background-color: var(--paper);
+  border-bottom: var(--border);
+  padding: 12px 0;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.scan-nav-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.scan-nav-left {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.back-home-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background-color: var(--grey-panel);
+  border: var(--border-sm);
+  border-radius: var(--radius-sm);
+  padding: 6px 12px;
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--ink);
+  cursor: pointer;
+  box-shadow: 2px 2px 0 var(--ink);
+  transition: all 120ms ease;
+}
+
+.back-home-btn:hover {
+  background-color: var(--sun);
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0 var(--ink);
+}
+
+.back-home-btn:active {
+  transform: translate(2px, 2px);
+  box-shadow: 0 0 0 var(--ink);
+}
+
+.scan-brand-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.scan-logo-box {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  background-color: var(--sun);
+  border: 1.5px solid var(--ink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ink);
+}
+
+.scan-brand-title {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: var(--ink);
+}
+
+.scan-brand-x {
+  color: var(--pink);
+}
+
+.scan-status-tag {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-weight: 700;
+  background-color: var(--ink);
+  color: var(--paper);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+/* Page Heading */
+.scan-workspace-main {
+  padding-top: var(--space-6);
+  padding-bottom: var(--space-9);
+  flex-grow: 1;
+}
+
+.scan-page-heading {
+  margin-bottom: var(--space-6);
+  max-width: 800px;
+}
+
+.scan-eyebrow-row {
+  margin-bottom: var(--space-2);
+}
+
+.scan-eyebrow-pill {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--ink);
+  background-color: var(--sun);
+  border: 1.5px solid var(--ink);
+  border-radius: var(--radius-pill);
+  padding: 2px 10px;
+  box-shadow: 1.5px 1.5px 0 var(--ink);
+}
+
+.scan-page-title {
+  font-size: var(--text-h2);
+  font-weight: 800;
+  line-height: 1.15;
+  color: var(--ink);
+  margin-bottom: var(--space-3);
+}
+
+.scan-page-subtitle {
+  font-size: 1.05rem;
+  line-height: 1.55;
+  color: var(--grey-text);
+}
+
+/* Two Column Workspace Grid */
+.scan-workspace-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.15fr;
+  gap: var(--space-6);
+  align-items: start;
+}
+
+@media (max-width: 992px) {
+  .scan-workspace-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-5);
+  }
+}

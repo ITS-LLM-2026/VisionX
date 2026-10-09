@@ -1,0 +1,187 @@
+@import './tokens.css';
+
+/* CSS Reset & Defaults */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--ink);
+  background-color: var(--paper);
+  line-height: 1.6;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* Typography Defaults */
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+  color: var(--ink);
+}
+
+p {
+  color: var(--grey-text);
+  font-size: var(--text-body);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Highlighter Mark Effect (Retro Neo-Brutalist Key Accent) */
+mark.highlighter {
+  background-color: var(--sun);
+  color: var(--ink);
+  padding: 0.1em 0.25em;
+  border: 2px solid var(--ink);
+  border-radius: 4px;
+  display: inline-block;
+  transform: rotate(-1deg);
+  box-shadow: 2px 2px 0 var(--ink);
+  line-height: 1.1;
+}
+
+mark.highlighter-pink {
+  background-color: var(--pink);
+  color: var(--ink);
+  padding: 0.1em 0.25em;
+  border: 2px solid var(--ink);
+  border-radius: 4px;
+  display: inline-block;
+  transform: rotate(1deg);
+  box-shadow: 2px 2px 0 var(--ink);
+}
+
+mark.highlighter-violet {
+  background-color: var(--violet);
+  color: var(--white);
+  padding: 0.1em 0.25em;
+  border: 2px solid var(--ink);
+  border-radius: 4px;
+  display: inline-block;
+  transform: rotate(-1.5deg);
+  box-shadow: 2px 2px 0 var(--ink);
+}
+
+/* Section Containers & Layout */
+.page-container {
+  width: 100%;
+  max-width: var(--container-width);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--space-5);
+  padding-right: var(--space-5);
+}
+
+@media (max-width: 640px) {
+  .page-container {
+    padding-left: var(--space-4);
+    padding-right: var(--space-4);
+  }
+}
+
+.section-wrapper {
+  position: relative;
+  padding-top: var(--space-9);
+  padding-bottom: var(--space-9);
+  border-bottom: var(--border);
+  overflow: hidden;
+}
+
+@media (max-width: 768px) {
+  .section-wrapper {
+    padding-top: 56px;
+    padding-bottom: 56px;
+  }
+}
+
+/* Section Backgrounds (Alternate Poster Panels) */
+.bg-sun {
+  background-color: var(--sun);
+}
+
+.bg-paper {
+  background-color: var(--paper);
+}
+
+.bg-peach {
+  background-color: var(--bg-peach);
+}
+
+.bg-ink {
+  background-color: var(--ink);
+  color: var(--paper);
+}
+
+.bg-ink h1, .bg-ink h2, .bg-ink h3, .bg-ink h4 {
+  color: var(--paper);
+}
+
+.bg-ink p {
+  color: #D6D2CA;
+}
+
+/* Reset headings and paragraphs inside paper-colored cards nested in dark sections */
+.bg-ink .neo-card,
+.bg-ink .aws-overlapping-card,
+.bg-ink [class*="card-paper"],
+.bg-ink [class*="bg-paper"] {
+  color: var(--ink);
+}
+
+.bg-ink .neo-card h1, .bg-ink .neo-card h2, .bg-ink .neo-card h3, .bg-ink .neo-card h4,
+.bg-ink .aws-overlapping-card h1, .bg-ink .aws-overlapping-card h2, .bg-ink .aws-overlapping-card h3, .bg-ink .aws-overlapping-card h4,
+.bg-ink [class*="bg-paper"] h1, .bg-ink [class*="bg-paper"] h2, .bg-ink [class*="bg-paper"] h3, .bg-ink [class*="bg-paper"] h4 {
+  color: var(--ink);
+}
+
+.bg-ink .neo-card p,
+.bg-ink .aws-overlapping-card p,
+.bg-ink [class*="bg-paper"] p {
+  color: #222222;
+}
+
+/* Decorative Geometric Background Shapes */
+.deco-circle {
+  position: absolute;
+  border-radius: 50%;
+  border: var(--border);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.deco-block {
+  position: absolute;
+  border: var(--border);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Accessibility & Focus Indicators */
+:focus-visible {
+  outline: 3px solid var(--ink);
+  outline-offset: 3px;
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

@@ -1,0 +1,63 @@
+:root {
+  /* Color Palette - Strict Retro Neo-Brutalist */
+  --ink: #0B0B0B;
+  --paper: #FBF8F2;
+  --bg-peach: #F0C9BC;
+  --sun: #FFC61A;
+  --pink: #FF4F81;
+  --violet: #7B5CFA;
+  --lime: #8FD62B;
+  --green: #3CC24A;
+  --sky: #CFE4FB;
+  --sand: #FFE9A8;
+  --grey-text: #5E5E5E;
+  --grey-panel: #EFEDE8;
+  --white: #FFFFFF;
+
+  /* Borders */
+  --border: 2.5px solid var(--ink);
+  --border-sm: 2px solid var(--ink);
+  --border-thick: 3px solid var(--ink);
+
+  /* Radii */
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-pill: 999px;
+
+  /* Hard Offset Shadows - STRICT ZERO BLUR */
+  --shadow-xs: 2px 2px 0 var(--ink);
+  --shadow-sm: 3px 3px 0 var(--ink);
+  --shadow-md: 6px 6px 0 var(--ink);
+  --shadow-lg: 10px 10px 0 var(--ink);
+  --shadow-hover: 8px 8px 0 var(--ink);
+
+  /* Spacing Grid (8px base) */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+  --space-9: 96px;
+
+  /* Layout */
+  --container-width: 1200px;
+
+  /* Typography */
+  --font-display: 'Bricolage Grotesque', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-chunky: 'Dela Gothic One', sans-serif;
+  --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'Space Mono', monospace;
+
+  /* Type Scale */
+  --text-hero: clamp(2.6rem, 6.5vw, 5rem);
+  --text-h2: clamp(1.85rem, 4vw, 3rem);
+  --text-h3: 1.35rem;
+  --text-h4: 1.15rem;
+  --text-body: 1rem;
+  --text-small: 0.875rem;
+  --text-label: 0.75rem;
+}

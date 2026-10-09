@@ -1,0 +1,45 @@
+.input-mode-selector {
+  display: flex;
+  background-color: var(--grey-panel);
+  border: var(--border);
+  border-radius: var(--radius-md);
+  padding: 6px;
+  gap: 8px;
+  box-shadow: var(--shadow-sm);
+  margin-bottom: var(--space-4);
+}
+
+.mode-tab-btn {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: transparent;
+  border: 2px solid transparent;
+  border-radius: var(--radius-sm);
+  padding: 10px 16px;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--ink);
+  cursor: pointer;
+  transition: all 120ms ease;
+  user-select: none;
+}
+
+.mode-tab-btn:hover:not(:disabled) {
+  background-color: var(--sand);
+}
+
+.mode-tab-btn.active {
+  background-color: var(--sun);
+  border-color: var(--ink);
+  box-shadow: 2px 2px 0 var(--ink);
+  transform: translate(-1px, -1px);
+}
+
+.mode-tab-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

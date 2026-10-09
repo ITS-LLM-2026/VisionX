@@ -1,0 +1,92 @@
+.neo-card {
+  position: relative;
+  background-color: var(--paper);
+  border: var(--border);
+  border-radius: var(--radius-md);
+  color: var(--ink);
+  transition: transform 150ms ease, box-shadow 150ms ease;
+}
+
+.neo-card-content {
+  position: relative;
+  z-index: 1;
+}
+
+/* Shadows */
+.neo-shadow-none {
+  box-shadow: none;
+}
+.neo-shadow-sm {
+  box-shadow: var(--shadow-sm);
+}
+.neo-shadow-md {
+  box-shadow: var(--shadow-md);
+}
+.neo-shadow-lg {
+  box-shadow: var(--shadow-lg);
+}
+
+/* Hover Lift */
+.neo-card-hover:hover {
+  transform: translate(-3px, -3px);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Variant Backgrounds */
+.neo-card-paper {
+  background-color: var(--paper);
+}
+.neo-card-sun {
+  background-color: var(--sun);
+}
+.neo-card-peach {
+  background-color: var(--bg-peach);
+}
+.neo-card-sky {
+  background-color: var(--sky);
+}
+.neo-card-ink {
+  background-color: var(--ink);
+  color: var(--paper);
+}
+
+/* Folder Card Variant with Top Accent Tab */
+.neo-card-folder {
+  margin-top: 14px;
+}
+
+.folder-tab {
+  position: absolute;
+  top: -14px;
+  left: 20px;
+  padding: 4px 14px;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-top: var(--border);
+  border-left: var(--border);
+  border-right: var(--border);
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  box-shadow: -2px -2px 0 var(--ink);
+  z-index: 2;
+}
+
+.folder-tab-sun {
+  background-color: var(--sun);
+  color: var(--ink);
+}
+.folder-tab-pink {
+  background-color: var(--pink);
+  color: var(--paper);
+}
+.folder-tab-violet {
+  background-color: var(--violet);
+  color: var(--paper);
+}
+.folder-tab-lime {
+  background-color: var(--lime);
+  color: var(--ink);
+}

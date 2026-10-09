@@ -1,0 +1,65 @@
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: var(--border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  transition: transform 120ms ease, box-shadow 120ms ease;
+  user-select: none;
+  min-width: 44px;
+  min-height: 44px;
+}
+
+.icon-btn:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: var(--shadow-md);
+}
+
+.icon-btn:active {
+  transform: translate(3px, 3px);
+  box-shadow: 0 0 0 var(--ink);
+}
+
+.icon-btn-sm {
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  min-height: 36px;
+}
+
+.icon-btn-md {
+  width: 44px;
+  height: 44px;
+}
+
+.icon-btn-lg {
+  width: 52px;
+  height: 52px;
+}
+
+.icon-btn-paper {
+  background-color: var(--paper);
+  color: var(--ink);
+}
+
+.icon-btn-sun {
+  background-color: var(--sun);
+  color: var(--ink);
+}
+
+.icon-btn-pink {
+  background-color: var(--pink);
+  color: var(--paper);
+}
+
+.icon-btn-violet {
+  background-color: var(--violet);
+  color: var(--paper);
+}
+
+.icon-btn-ink {
+  background-color: var(--ink);
+  color: var(--paper);
+}

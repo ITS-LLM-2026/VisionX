@@ -1,0 +1,65 @@
+.section-heading {
+  margin-bottom: var(--space-6);
+  position: relative;
+  z-index: 1;
+}
+
+.section-heading.align-left {
+  text-align: left;
+}
+
+.section-heading.align-center {
+  text-align: center;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.section-eyebrow-wrapper {
+  margin-bottom: var(--space-3);
+}
+
+.eyebrow-pill {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 4px 12px;
+  border: var(--border-sm);
+  border-radius: var(--radius-pill);
+  box-shadow: 2px 2px 0 var(--ink);
+}
+
+.eyebrow-sun { background-color: var(--sun); color: var(--ink); }
+.eyebrow-pink { background-color: var(--pink); color: var(--paper); }
+.eyebrow-violet { background-color: var(--violet); color: var(--paper); }
+.eyebrow-lime { background-color: var(--lime); color: var(--ink); }
+.eyebrow-sky { background-color: var(--sky); color: var(--ink); }
+.eyebrow-ink { background-color: var(--ink); color: var(--paper); }
+
+.section-title {
+  font-size: var(--text-h2);
+  margin-bottom: var(--space-3);
+  line-height: 1.1;
+}
+
+.section-description {
+  font-size: 1.125rem;
+  max-width: 680px;
+  line-height: 1.6;
+}
+
+.section-heading.align-center .section-description {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.theme-dark .section-title {
+  color: var(--paper);
+}
+
+.theme-dark .section-description {
+  color: #D6D2CA;
+}

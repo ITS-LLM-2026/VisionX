@@ -1,0 +1,170 @@
+.capabilities-section {
+  position: relative;
+  background-color: var(--sand);
+  overflow: hidden;
+}
+
+.cap-deco-circle {
+  position: absolute;
+  bottom: -60px;
+  left: -40px;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background-color: var(--sun);
+  border: var(--border);
+  box-shadow: 4px 4px 0 var(--ink);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.capabilities-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-6);
+  position: relative;
+  z-index: 1;
+}
+
+@media (max-width: 800px) {
+  .capabilities-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.capability-card {
+  height: 100%;
+}
+
+.cap-content {
+  padding: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.cap-icon-box {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-sm);
+  border: var(--border);
+  box-shadow: 2.5px 2.5px 0 var(--ink);
+  margin-bottom: var(--space-4);
+  color: var(--ink);
+}
+
+.box-sun { background-color: var(--sun); }
+.box-lime { background-color: var(--lime); }
+.box-pink { background-color: var(--pink); color: var(--paper); }
+.box-violet { background-color: var(--violet); color: var(--paper); }
+
+.cap-title {
+  font-size: 1.4rem;
+  font-weight: 800;
+  margin-bottom: var(--space-2);
+  color: var(--ink);
+}
+
+.cap-desc {
+  font-size: 0.95rem;
+  line-height: 1.55;
+  color: #333333;
+  margin-bottom: var(--space-4);
+  flex-grow: 1;
+}
+
+/* Mini Visual Mockups inside Cards */
+.cap-visual {
+  background-color: var(--grey-panel);
+  border: 1.5px solid var(--ink);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+}
+
+.visual-scan {
+  background-color: #E2DFD6;
+}
+
+.mini-bbox {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: var(--ink);
+  color: var(--sun);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.mini-conf {
+  background-color: var(--pink);
+  color: var(--paper);
+  padding: 1px 4px;
+  border-radius: 2px;
+}
+
+.visual-checklist {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.mini-check-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.check-box-icon {
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+  background-color: var(--lime);
+  border: 1px solid var(--ink);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.65rem;
+}
+
+.visual-uncertainty {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.uncertain-note {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--grey-text);
+  font-weight: 700;
+}
+
+.visual-chat {
+  background-color: var(--sky);
+}
+
+.mini-chat-bubble {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #173859;
+}
+
+.sparkle-mini {
+  color: var(--violet);
+}
