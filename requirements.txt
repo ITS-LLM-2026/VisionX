@@ -1,9 +1,10 @@
-# VisionX Backend Dependencies
+# VisionX Backend Dependencies (Optimized for cloud deployment)
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch>=2.0.0
+torchvision>=0.15.0
 fastapi>=0.115.0
 uvicorn[standard]>=0.30.0
 ultralytics>=8.3.0
-torch>=2.0.0
-torchvision>=0.15.0
 pillow>=10.0.0
 pydantic>=2.0.0
 python-dotenv>=1.0.0

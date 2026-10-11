@@ -1,5 +1,6 @@
 import type { DetectionApiResponse } from '../../types';
 import { DEMO_SCENARIOS } from '../../data/demoScenarios';
+import { getApiUrl } from '../../lib/apiConfig';
 
 export class YoloDetectionService {
   /**
@@ -15,7 +16,7 @@ export class YoloDetectionService {
     formData.append('file', imageBlob, filename);
 
     try {
-      const response = await fetch(`/api/detect?conf=${confidenceThreshold}`, {
+      const response = await fetch(getApiUrl(`/api/detect?conf=${confidenceThreshold}`), {
         method: 'POST',
         body: formData,
       });
@@ -68,7 +69,7 @@ export class YoloDetectionService {
     supportedClasses?: Record<number, string>;
   }> {
     try {
-      const res = await fetch('/api/health');
+      const res = await fetch(getApiUrl('/api/health'));
       if (res.ok) {
         const data = await res.json();
         return {

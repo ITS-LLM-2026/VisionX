@@ -1,9 +1,32 @@
 services:
+  # 1. VisionX Backend API Service (YOLO11n Inference + Strands Conversational Agent)
+  - type: web
+    name: visionx-api
+    runtime: python
+    plan: free
+    region: oregon
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn backend.server:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
+      - key: GROK_API
+        sync: false
+
+  # 2. VisionX Frontend Web Service (Vite React SPA)
   - type: web
     name: visionx
     runtime: static
+    plan: free
+    region: oregon
     buildCommand: npm run build
     staticPublishPath: ./dist
+    envVars:
+      - key: VITE_API_URL
+        fromService:
+          type: web
+          name: visionx-api
+          property: host
     routes:
       - type: rewrite
         source: /*

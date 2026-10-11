@@ -1,4 +1,5 @@
 import type { AssistantResponse, DemoScenario, DetectedWasteObject, AgentChatApiResponse } from '../../types';
+import { getApiUrl } from '../../lib/apiConfig';
 
 export class MockAssistantService {
   public static async ask(
@@ -45,9 +46,6 @@ export interface AgentChatParams {
 }
 
 export class StrandsAgentService {
-  private static readonly ENDPOINT = '/api/visionx/chat';
-  private static readonly FALLBACK_ENDPOINT = 'http://127.0.0.1:8000/api/visionx/chat';
-
   public static async ask(params: AgentChatParams): Promise<AssistantResponse> {
     const payload = {
       session_id: params.sessionId || 'session-' + Date.now(),
@@ -59,9 +57,10 @@ export class StrandsAgentService {
       locality: params.locality || 'General Municipal',
     };
 
+    const targetUrl = getApiUrl('/api/visionx/chat');
     let response: Response;
     try {
-      response = await fetch(this.ENDPOINT, {
+      response = await fetch(targetUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -73,8 +72,8 @@ export class StrandsAgentService {
         throw new Error(`Chat API HTTP ${response.status}`);
       }
     } catch {
-      // Direct fallback to 8000 if proxy failed
-      response = await fetch(this.FALLBACK_ENDPOINT, {
+      // Direct local fallback if proxy was offline
+      response = await fetch('http://127.0.0.1:8000/api/visionx/chat', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
