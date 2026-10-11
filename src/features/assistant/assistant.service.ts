@@ -1,4 +1,4 @@
-import type { AssistantResponse, DemoScenario } from '../../types';
+import type { AssistantResponse, DemoScenario, DetectedWasteObject, AgentChatApiResponse } from '../../types';
 
 export class MockAssistantService {
   public static async ask(
@@ -34,3 +34,70 @@ export class MockAssistantService {
     };
   }
 }
+
+export interface AgentChatParams {
+  question: string;
+  sessionId?: string;
+  selectedObject?: DetectedWasteObject | null;
+  allDetections?: DetectedWasteObject[];
+  history?: { sender: 'user' | 'assistant'; text: string }[];
+  locality?: string;
+}
+
+export class StrandsAgentService {
+  private static readonly ENDPOINT = '/api/visionx/chat';
+  private static readonly FALLBACK_ENDPOINT = 'http://127.0.0.1:8000/api/visionx/chat';
+
+  public static async ask(params: AgentChatParams): Promise<AssistantResponse> {
+    const payload = {
+      session_id: params.sessionId || 'session-' + Date.now(),
+      user_question: params.question,
+      selected_detection_id: params.selectedObject?.id,
+      selected_object: params.selectedObject,
+      all_detections: params.allDetections || [],
+      history: params.history || [],
+      locality: params.locality || 'General Municipal',
+    };
+
+    let response: Response;
+    try {
+      response = await fetch(this.ENDPOINT, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Chat API HTTP ${response.status}`);
+      }
+    } catch {
+      // Direct fallback to 8000 if proxy failed
+      response = await fetch(this.FALLBACK_ENDPOINT, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Chat fallback API HTTP ${response.status}`);
+      }
+    }
+
+    const data: AgentChatApiResponse = await response.json();
+
+    return {
+      message: data.answer,
+      isGrounded: true,
+      sourceUrls: data.sources || ['VisionX AI Knowledge Base'],
+      needsVerification: data.needs_clarification,
+      suggestedQuestions: data.suggested_questions || [],
+      uncertaintyNote: data.uncertainty_note,
+      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+    };
+  }
+}
+

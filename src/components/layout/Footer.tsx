@@ -34,8 +34,8 @@ export const Footer: React.FC = () => {
               See it. Understand it. Dispose of it right. Turning everyday computer vision into an actionable waste-disposal decision.
             </p>
             <div className="footer-hackathon-badge">
-              <span className="hackathon-tag">WeMakeDevs × AWS</span>
-              <span className="track-tag">Waste &amp; Energy Track</span>
+              <span className="hackathon-tag">AI-Powered</span>
+              <span className="track-tag">Waste &amp; Sustainability</span>
             </div>
           </div>
 
@@ -109,10 +109,10 @@ export const Footer: React.FC = () => {
             <h4 className="footer-heading">Status</h4>
             <div className="footer-status-box">
               <span className="status-indicator-live" />
-              <span>Phase 1 Frontend Prototype (Mock Data Mode)</span>
+              <span>Production Ready (YOLO &amp; Strands Live)</span>
             </div>
             <p className="footer-disclaimer">
-              Detection metrics and AI responses on this landing page are structured demo simulations. Real model integration in progress.
+              Real-time object detection and grounded waste segregation intelligence powered by live YOLO11n computer vision and Strands Agents.
             </p>
             <button
               type="button"
@@ -128,7 +128,7 @@ export const Footer: React.FC = () => {
 
         {/* Bottom Legal / Attribution Bar */}
         <div className="footer-bottom-bar">
-          <p>© {CURRENT_YEAR} VisionX Team. Built for the WeMakeDevs × AWS Environmental Hacks Hackathon.</p>
+          <p>© {CURRENT_YEAR} VisionX Team. Autonomous Waste Segregation &amp; Material Intelligence.</p>
           <div className="footer-bottom-tags">
             <span className="neo-tag">Open Source</span>
             <span className="neo-tag">Local-First Architecture</span>

@@ -171,6 +171,94 @@
   flex-wrap: wrap;
 }
 
+/* Multi-Item Object Navigator Bar */
+.multi-object-nav-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: var(--sand);
+  border-bottom: var(--border);
+  padding: 8px 18px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.nav-counter-tag {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.nav-arrow-buttons {
+  display: flex;
+  gap: 6px;
+}
+
+.nav-btn {
+  background-color: var(--paper);
+  border: 1.5px solid var(--ink);
+  border-radius: var(--radius-sm);
+  padding: 4px 8px;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.nav-btn:hover:not(:disabled) {
+  background-color: var(--sun);
+}
+
+.nav-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Recycling Guidance & Reusability Blocks */
+.result-guidance-card {
+  background-color: var(--grey-panel);
+  border: 1.5px solid var(--ink);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  margin-bottom: var(--space-4);
+}
+
+.guidance-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: var(--ink);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+}
+
+.guidance-text {
+  font-size: 0.88rem;
+  line-height: 1.45;
+  color: var(--ink);
+}
+
+.result-reusability-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  background-color: #F4FBF4;
+  border: 1.5px solid var(--green);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  margin-bottom: var(--space-4);
+  font-size: 0.85rem;
+  color: #174E25;
+}
+
 .result-panel-body {
   padding: var(--space-5);
 }

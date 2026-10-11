@@ -2,11 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { ScanLine, ArrowLeft, Sparkles, X, Send } from 'lucide-react';
 import { useRouter } from '../lib/useRouter';
 import { useCamera } from '../hooks/useCamera';
-import { WasteAnalysisService } from '../features/waste/waste.service';
-import { MockAssistantService } from '../features/assistant/assistant.service';
-import { DEMO_SCENARIOS } from '../data/demoScenarios';
+import { YoloDetectionService } from '../features/detection/detection.service';
+import { StrandsAgentService } from '../features/assistant/assistant.service';
 import { getTimestamp, generateId } from '../lib/utils';
-import type { ScannerInputMode, WasteAnalysisResult, AssistantResponse, DemoScenario } from '../types';
+import type { ScannerInputMode, DetectedWasteObject, AssistantResponse } from '../types';
 import { Badge } from '../components/ui/Badge';
 import { InputModeSelector } from '../components/vision/InputModeSelector';
 import { CameraViewfinder } from '../components/vision/CameraViewfinder';
@@ -28,14 +27,21 @@ export const ScanPage: React.FC = () => {
     sourceMode: ScannerInputMode;
   } | null>(null);
 
-  // Selected Demo Scenario ID for deterministic simulation
-  const [selectedScenarioId, setSelectedScenarioId] = useState<string>('plastic-bottle');
-
-  // Analysis State
+  // Real YOLO Detection State
   const [isAnalyzing, setIsAnalyzing] = useState<boolean>(false);
-  const [analysisResult, setAnalysisResult] = useState<WasteAnalysisResult | null>(null);
+  const [hasAnalyzed, setHasAnalyzed] = useState<boolean>(false);
+  const [detections, setDetections] = useState<DetectedWasteObject[]>([]);
+  const [selectedObjectId, setSelectedObjectId] = useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  // Assistant State
+  // Backend Health Status
+  const [backendHealth, setBackendHealth] = useState<{
+    isOnline: boolean;
+    device?: string;
+    classesCount?: number;
+  }>({ isOnline: false });
+
+  // Assistant Drawer State (Powered by Strands Agents)
   const [isAssistantOpen, setIsAssistantOpen] = useState<boolean>(false);
   const [assistantInput, setAssistantInput] = useState<string>('');
   const [assistantLoading, setAssistantLoading] = useState<boolean>(false);
@@ -45,6 +51,8 @@ export const ScanPage: React.FC = () => {
     text: string;
     sources?: string[];
     needsVerification?: boolean;
+    suggestedQuestions?: string[];
+    uncertaintyNote?: string | null;
     timestamp: string;
   }[]>([]);
 
@@ -62,6 +70,23 @@ export const ScanPage: React.FC = () => {
     captureFrame,
   } = useCamera();
 
+  // Check Backend Health on Mount
+  useEffect(() => {
+    let isMounted = true;
+    const checkStatus = async () => {
+      const health = await YoloDetectionService.checkHealth();
+      if (isMounted) {
+        setBackendHealth(health);
+      }
+    };
+    checkStatus();
+    const interval = setInterval(checkStatus, 15000);
+    return () => {
+      isMounted = false;
+      clearInterval(interval);
+    };
+  }, []);
+
   // Helper to safely revoke object URL and clean previous image
   const clearSelectedImage = () => {
     if (selectedImage?.url) {
@@ -78,18 +103,24 @@ export const ScanPage: React.FC = () => {
   const handleModeChange = (mode: ScannerInputMode) => {
     if (mode === inputMode) return;
 
-    // Stop active camera when leaving camera mode
     if (inputMode === 'camera' && isCameraActive) {
       stopCamera();
     }
 
     clearSelectedImage();
-    setAnalysisResult(null);
+    resetDetectionState();
     setInputMode(mode);
   };
 
-  // Handle frame capture from live camera
-  const handleCaptureFrame = async () => {
+  const resetDetectionState = () => {
+    setDetections([]);
+    setSelectedObjectId(null);
+    setHasAnalyzed(false);
+    setErrorMessage(null);
+  };
+
+  // Handle frame capture from live camera with optional live tracking handover
+  const handleCaptureFrame = async (liveDets?: DetectedWasteObject[]) => {
     const captured = await captureFrame();
     if (captured) {
       clearSelectedImage();
@@ -98,7 +129,14 @@ export const ScanPage: React.FC = () => {
         url: captured.url,
         sourceMode: 'camera',
       });
-      setAnalysisResult(null);
+      if (liveDets && liveDets.length > 0) {
+        setDetections(liveDets);
+        setSelectedObjectId(liveDets[0].id);
+        setHasAnalyzed(true);
+        setErrorMessage(null);
+      } else {
+        resetDetectionState();
+      }
     }
   };
 
@@ -110,30 +148,44 @@ export const ScanPage: React.FC = () => {
       url,
       sourceMode: 'upload',
     });
-    setAnalysisResult(null);
+    resetDetectionState();
   };
 
   // Retake or Choose another image
   const handleRetry = () => {
     clearSelectedImage();
-    setAnalysisResult(null);
-
-    // If retrying in camera mode and camera wasn't running, user can start camera again
+    resetDetectionState();
   };
 
-  // Trigger Waste Analysis
+  // Trigger Real YOLO Waste Analysis
   const handleAnalyzeWaste = async () => {
     if (!selectedImage) return;
 
     setIsAnalyzing(true);
+    setErrorMessage(null);
+
     try {
-      const result = await WasteAnalysisService.analyzeWasteImage(
+      const result = await YoloDetectionService.detectObjects(
         selectedImage.blob,
-        selectedScenarioId
+        0.18
       );
-      setAnalysisResult(result);
-    } catch {
-      // Mock fallback
+
+      if (result.success) {
+        setDetections(result.detections);
+        setSelectedObjectId(result.detections.length > 0 ? result.detections[0].id : null);
+        setHasAnalyzed(true);
+        setErrorMessage(null);
+      } else {
+        setErrorMessage(result.error || 'Failed to run YOLO detection.');
+        setDetections([]);
+        setSelectedObjectId(null);
+        setHasAnalyzed(false);
+      }
+    } catch (err: any) {
+      setErrorMessage(err?.message || 'Unexpected error during detection.');
+      setDetections([]);
+      setSelectedObjectId(null);
+      setHasAnalyzed(false);
     } finally {
       setIsAnalyzing(false);
     }
@@ -142,15 +194,45 @@ export const ScanPage: React.FC = () => {
   // Reset entire analysis to scan a new item
   const handleResetAnalysis = () => {
     clearSelectedImage();
-    setAnalysisResult(null);
+    resetDetectionState();
     setChatHistory([]);
   };
 
-  // Active scenario data for assistant grounding
-  const activeScenario: DemoScenario =
-    DEMO_SCENARIOS.find((s: DemoScenario) => s.id === selectedScenarioId) || DEMO_SCENARIOS[0];
+  // Select an individual detected object from chips or bounding boxes
+  const handleSelectObject = (id: string) => {
+    setSelectedObjectId(id);
+  };
 
-  // Send message to assistant
+  // Currently selected object
+  const selectedObject: DetectedWasteObject | null =
+    detections.find((d) => d.id === selectedObjectId) || (detections.length > 0 ? detections[0] : null);
+
+  const currentIndex = detections.findIndex((d) => d.id === selectedObject?.id);
+
+  const handleSelectNext = () => {
+    if (currentIndex >= 0 && currentIndex < detections.length - 1) {
+      setSelectedObjectId(detections[currentIndex + 1].id);
+    }
+  };
+
+  const handleSelectPrev = () => {
+    if (currentIndex > 0) {
+      setSelectedObjectId(detections[currentIndex - 1].id);
+    }
+  };
+
+  // Grounded context for starter chips
+  const starterQuestions = selectedObject ? [
+    `How should I dispose of this ${selectedObject.display_name}?`,
+    `What preparation steps are required before recycling?`,
+    `What are the contamination hazards for this material?`,
+  ] : [
+    'How do I properly sort mixed recyclable containers?',
+    'What items cause mechanical sorting failures?',
+    'What are the most common household recycling errors?',
+  ];
+
+  // Send message to Strands conversational agent
   const handleAskAssistant = async (questionText: string) => {
     if (!questionText.trim()) return;
     const userMsgTime = getTimestamp();
@@ -168,10 +250,14 @@ export const ScanPage: React.FC = () => {
     setAssistantLoading(true);
 
     try {
-      const response: AssistantResponse = await MockAssistantService.ask(
-        questionText,
-        activeScenario
-      );
+      const response: AssistantResponse = await StrandsAgentService.ask({
+        question: questionText,
+        selectedObject,
+        allDetections: detections,
+        history: chatHistory.map((m) => ({ sender: m.sender, text: m.text })),
+        sessionId: 'visionx-session-' + (selectedObject?.id || 'live-frame'),
+      });
+
       setChatHistory((prev) => [
         ...prev,
         {
@@ -180,6 +266,8 @@ export const ScanPage: React.FC = () => {
           text: response.message,
           sources: response.sourceUrls,
           needsVerification: response.needsVerification,
+          suggestedQuestions: response.suggestedQuestions,
+          uncertaintyNote: response.uncertaintyNote,
           timestamp: response.timestamp || userMsgTime,
         },
       ]);
@@ -189,7 +277,7 @@ export const ScanPage: React.FC = () => {
         {
           id: generateId('err'),
           sender: 'assistant',
-          text: 'Simulation error while retrieving grounded context.',
+          text: 'VisionX Strands Agent encountered a connection issue. Please verify that the backend server is running.',
           timestamp: userMsgTime,
         },
       ]);
@@ -242,9 +330,15 @@ export const ScanPage: React.FC = () => {
           </div>
 
           <div className="scan-nav-right">
-            <Badge variant="sun" size="sm">
-              DEMO MODE · MODEL NOT CONNECTED
-            </Badge>
+            {backendHealth.isOnline ? (
+              <Badge variant="live" size="sm">
+                YOLO11n LIVE ({backendHealth.device?.toUpperCase() || 'CPU'})
+              </Badge>
+            ) : (
+              <Badge variant="sun" size="sm">
+                LOCAL YOLO SERVER READY (START WITH PYTHON)
+              </Badge>
+            )}
           </div>
         </div>
       </header>
@@ -258,10 +352,10 @@ export const ScanPage: React.FC = () => {
               <span className="scan-eyebrow-pill">VISIONX / WASTE INTELLIGENCE</span>
             </div>
             <h1 className="scan-page-title">
-              Let's figure out <mark className="highlighter">where it goes</mark>.
+              Real-Time <mark className="highlighter">Waste Detection</mark>.
             </h1>
             <p className="scan-page-subtitle">
-              Capture a live photo using your camera or upload an image to explore its waste category, preparation steps, and disposal guidance.
+              Capture a live photo using your camera or upload an image to run real YOLO object detection, explore multi-object bounding boxes, and get actionable disposal instructions.
             </p>
           </div>
 
@@ -306,11 +400,14 @@ export const ScanPage: React.FC = () => {
                 <CapturedPreviewCard
                   imageUrl={selectedImage.url}
                   sourceMode={selectedImage.sourceMode}
-                  selectedScenarioId={selectedScenarioId}
-                  onScenarioChange={setSelectedScenarioId}
+                  detections={detections}
+                  selectedObjectId={selectedObjectId}
+                  onSelectObject={handleSelectObject}
                   onAnalyze={handleAnalyzeWaste}
                   onRetry={handleRetry}
                   isAnalyzing={isAnalyzing}
+                  hasAnalyzed={hasAnalyzed}
+                  errorMessage={errorMessage}
                 />
               )}
             </div>
@@ -318,8 +415,13 @@ export const ScanPage: React.FC = () => {
             {/* RIGHT COLUMN: Analysis & Guidance Results */}
             <div className="workspace-column-result">
               <AnalysisResultPanel
-                result={analysisResult}
+                selectedObject={selectedObject}
+                totalDetections={detections.length}
+                currentIndex={currentIndex}
                 isAnalyzing={isAnalyzing}
+                hasAnalyzed={hasAnalyzed}
+                onSelectNext={handleSelectNext}
+                onSelectPrev={handleSelectPrev}
                 onReset={handleResetAnalysis}
                 onOpenAssistant={() => setIsAssistantOpen(true)}
               />
@@ -340,7 +442,7 @@ export const ScanPage: React.FC = () => {
                 <div>
                   <h4 className="drawer-title">VisionX Conversational Assistant</h4>
                   <span className="drawer-subtitle">
-                    Grounded with {activeScenario.name} context • Strands Spec
+                    Grounded with {selectedObject ? selectedObject.display_name : 'Municipal Waste'} context
                   </span>
                 </div>
               </div>
@@ -348,14 +450,10 @@ export const ScanPage: React.FC = () => {
                 type="button"
                 className="drawer-close-btn"
                 onClick={() => setIsAssistantOpen(false)}
-                aria-label="Close assistant panel"
+                aria-label="Close assistant"
               >
-                <X size={20} strokeWidth={2.5} />
+                <X size={18} strokeWidth={2.5} />
               </button>
-            </div>
-
-            <div className="drawer-disclaimer-banner">
-              <span>DEMO MODE: Answers reflect structured waste knowledge base via mock service.</span>
             </div>
 
             <div className="drawer-chat-body">
@@ -363,14 +461,14 @@ export const ScanPage: React.FC = () => {
                 <div className="drawer-empty-state">
                   <p className="empty-prompt-title">Suggested questions for this item:</p>
                   <div className="suggested-questions-list">
-                    {activeScenario.sampleQuestions.map((q, idx) => (
+                    {starterQuestions.map((q, idx) => (
                       <button
                         key={idx}
                         type="button"
                         className="suggested-q-btn"
-                        onClick={() => handleAskAssistant(q.question)}
+                        onClick={() => handleAskAssistant(q)}
                       >
-                        <span>"{q.question}"</span>
+                        <span>"{q}"</span>
                       </button>
                     ))}
                   </div>
@@ -389,7 +487,16 @@ export const ScanPage: React.FC = () => {
                           </span>
                           <span className="bubble-time">{msg.timestamp}</span>
                         </div>
-                        <p className="bubble-text">{msg.text}</p>
+                        <div className="bubble-text">
+                          {msg.text.split('\n').map((paragraph, pIdx) =>
+                            paragraph.trim() ? (
+                              <p key={pIdx} className="bubble-paragraph">
+                                {paragraph}
+                              </p>
+                            ) : null
+                          )}
+                        </div>
+
                         {msg.sources && msg.sources.length > 0 && (
                           <div className="bubble-sources">
                             <span className="source-label">Grounded Sources:</span>
@@ -400,21 +507,45 @@ export const ScanPage: React.FC = () => {
                             ))}
                           </div>
                         )}
-                        {msg.needsVerification && (
+
+                        {msg.uncertaintyNote && (
                           <div className="verification-caveat">
-                            * Note: Material is visually inferred; verification recommended.
+                            * Note: {msg.uncertaintyNote}
+                          </div>
+                        )}
+
+                        {msg.sender === 'assistant' && msg.suggestedQuestions && msg.suggestedQuestions.length > 0 && (
+                          <div className="suggested-followups-container">
+                            <div className="source-label" style={{ marginBottom: '6px', marginTop: '4px' }}>
+                              SUGGESTED FOLLOW-UPS:
+                            </div>
+                            <div className="suggested-questions-list">
+                              {msg.suggestedQuestions.map((sq, sqIdx) => (
+                                <button
+                                  key={sqIdx}
+                                  type="button"
+                                  className="suggested-q-btn"
+                                  onClick={() => handleAskAssistant(sq)}
+                                  disabled={assistantLoading}
+                                  style={{ padding: '8px 12px', fontSize: '0.82rem' }}
+                                >
+                                  <span>"{sq}"</span>
+                                </button>
+                              ))}
+                            </div>
                           </div>
                         )}
                       </div>
                     </div>
                   ))}
+
                   {assistantLoading && (
                     <div className="chat-bubble-row row-assistant">
                       <div className="chat-bubble bubble-assistant bubble-loading">
                         <span className="typing-dot" />
                         <span className="typing-dot" />
                         <span className="typing-dot" />
-                        <span className="loading-label">Retrieving waste context...</span>
+                        <span className="loading-label">Thinking with Strands Agent...</span>
                       </div>
                     </div>
                   )}
@@ -422,6 +553,7 @@ export const ScanPage: React.FC = () => {
               )}
             </div>
 
+            {/* Drawer Input Bar */}
             <form
               className="drawer-input-form"
               onSubmit={(e) => {
@@ -432,7 +564,11 @@ export const ScanPage: React.FC = () => {
               <input
                 type="text"
                 className="drawer-input-field"
-                placeholder={`Ask about ${activeScenario.name} disposal or recycling...`}
+                placeholder={
+                  selectedObject
+                    ? `Ask about ${selectedObject.display_name}...`
+                    : 'Ask about waste sorting...'
+                }
                 value={assistantInput}
                 onChange={(e) => setAssistantInput(e.target.value)}
                 disabled={assistantLoading}
