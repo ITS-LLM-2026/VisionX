@@ -13,12 +13,10 @@ services:
       - key: GROK_API
         sync: false
 
-  # 2. VisionX Frontend Web Service (Vite React SPA)
+  # 2. VisionX Frontend Web Service (Vite React SPA on Global CDN)
   - type: web
     name: visionx
     runtime: static
-    plan: free
-    region: oregon
     buildCommand: npm run build
     staticPublishPath: ./dist
     envVars:
