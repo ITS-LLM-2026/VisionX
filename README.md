@@ -2,9 +2,7 @@
 
 <img src="./public/visionx-banner.svg" alt="VisionX Banner" width="100%" />
 
-# 👁️♻️ VisionX
-
-> **See it. Understand it. Dispose of it right.**
+---
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-black.svg?style=for-the-badge&logo=opensourceinitiative&logoColor=white)](LICENSE)
 [![React](https://img.shields.io/badge/React_19-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://react.dev/)
@@ -80,37 +78,49 @@ VisionX couples a client-side React 19 application with a high-throughput FastAP
 ### 1. End-to-End Inference Pipeline
 
 ```mermaid
-flowchart TD
-    subgraph Client ["Client Layer (React 19 + TypeScript)"]
-        A[User Input: Webcam Stream or File Dropzone] --> B[HTML5 Canvas Capture & Client Validation]
-        B --> C[Normalized Multipart Request]
-    end
-
-    subgraph Backend ["FastAPI Gateway (backend/server.py)"]
-        C --> D[Image Decoding & RGB Transformation]
-        D --> E[YOLO11n Inference Engine - weights/best.pt]
-        E --> F[Class-Agnostic NMS - IoU 0.35]
-        F --> G[Containment & IoU Deduplication Algorithm]
-        G --> H[Coordinate Normalization 0..1 Box Mapping]
-        H --> I[Waste Knowledge Engine - waste_knowledge.py]
-    end
-
-    subgraph AgenticLayer ["Reasoning Layer (backend/agent/strands_agent.py)"]
-        I --> J[Enriched Detection Payload]
-        J --> K[AWS Strands Agent Context Registry]
-        K --> L[Multi-Tool Agent Orchestrator]
-        L --> M[Structured JSON Response Generator]
-    end
-
-    subgraph Display ["Interactive UI (ScanPage.tsx)"]
-        M --> N[Bounding Box Overlays + Preparation Cards]
-        N --> O[Dynamic Chat Assistant Drawer + Action Chips]
-    end
-
-    style Client fill:#fef08a,stroke:#0f172a,stroke-width:2px;
-    style Backend fill:#e0e7ff,stroke:#0f172a,stroke-width:2px;
-    style AgenticLayer fill:#cffafe,stroke:#0f172a,stroke-width:2px;
-    style Display fill:#bbf7d0,stroke:#0f172a,stroke-width:2px;
+---
+config:
+  layout: elk
+  theme: base
+---
+flowchart LR
+ subgraph Client["Client Layer (React 19 + TypeScript)"]
+        B["HTML5 Canvas Capture & Client Validation"]
+        A["User Input: Webcam Stream or File Dropzone"]
+        C["Normalized Multipart Request"]
+  end
+ subgraph Backend["FastAPI Gateway (backend/server.py)"]
+        D["Image Decoding & RGB Transformation"]
+        E["YOLO11n Inference Engine - weights/best.pt"]
+        F["Class-Agnostic NMS - IoU 0.35"]
+        G["Containment & IoU Deduplication Algorithm"]
+        H["Coordinate Normalization 0..1 Box Mapping"]
+        I["Waste Knowledge Engine - waste_knowledge.py"]
+  end
+ subgraph AgenticLayer["Reasoning Layer (backend/agent/strands_agent.py)"]
+        J["Enriched Detection Payload"]
+        K["AWS Strands Agent Context Registry"]
+        L["Multi-Tool Agent Orchestrator"]
+        M["Structured JSON Response Generator"]
+  end
+ subgraph Display["Interactive UI (ScanPage.tsx)"]
+        N["Bounding Box Overlays + Preparation Cards"]
+        O["Dynamic Chat Assistant Drawer + Action Chips"]
+  end
+    A --> B
+    B --> C
+    C --> D
+    D --> E
+    E --> F
+    F --> G
+    G --> H
+    H --> I
+    I --> J
+    J --> K
+    K --> L
+    L --> M
+    M --> N
+    N --> O
 ```
 
 ---
@@ -152,35 +162,33 @@ sequenceDiagram
 ### 3. Waste Sorting & Contamination Decision Tree
 
 ```mermaid
-graph TD
+---
+config:
+  theme: default
+---
+flowchart TD
     Start([Visual Object Detected]) --> TypeCheck{Identify Primary Material}
 
     TypeCheck -->|Organic Biomass| OrganicPath[Compost / Green Organics Bin]
-    OrganicPath --> OrgPrep[Remove PLU stickers & plastic liners]
+    OrganicPath --> OrgPrep[Remove PLU Stickers and Plastic Liners]
 
-    TypeCheck -->|Rigid Packaging| RigidCheck{Identify Resin / Metal / Glass}
-    RigidCheck -->|Aluminium / Steel| MetalPath[100% Infinitely Recyclable - Metal Bin]
+    TypeCheck -->|Rigid Packaging| RigidCheck{Identify Material}
+    RigidCheck -->|Aluminium / Steel| MetalPath[Metal Recycling Bin]
     RigidCheck -->|Container Glass| GlassPath[Dedicated Glass Recycling Bin]
-    RigidCheck -->|Rigid Plastics PET #1 / HDPE #2| PlasticPrep[Empty Liquids, Rinse, Leave Cap ON]
-    PlasticPrep --> BlueBin[Curbside Blue Bin]
+    RigidCheck -->|PET #1 / HDPE #2| PlasticPrep[Empty and Rinse if Required]
+    PlasticPrep --> BlueBin[Curbside Blue Bin if Accepted]
 
     TypeCheck -->|Flexible Film / Bag| FilmCheck{Scrunch Test}
-    FilmCheck -->|Scrunches into ball| DropOff[Supermarket Soft Plastic Drop-Off Depot]
-    FilmCheck -->|Rigid / Mixed foil| TrashPath[Residual / Landfill Waste]
+    FilmCheck -->|Stays Crumpled| DropOff[Soft Plastic Drop-Off if Accepted]
+    FilmCheck -->|Mixed Foil or Not Accepted| TrashPath[Residual Waste Bin]
 
-    TypeCheck -->|E-Waste / Battery| HazardAlert[CRITICAL FIRE HAZARD]
-    HazardAlert --> BatteryTape[Tape Terminals -> Certified E-Waste Drop-Off]
+    TypeCheck -->|E-Waste / Battery| HazardAlert[Battery Fire Hazard]
+    HazardAlert --> BatteryTape[Follow Battery Safety Guidance]
+    BatteryTape --> EWasteDrop[Certified E-Waste / Battery Drop-Off]
 
-    TypeCheck -->|Food-Soiled Takeout / Foam #6| SoiledCheck{Grease or Polystyrene?}
-    SoiledCheck -->|Yes| TrashPath
-    SoiledCheck -->|No & Stamped #1/#5| BlueBin
-
-    style Start fill:#f8fafc,stroke:#0f172a,stroke-width:2px;
-    style BlueBin fill:#38bdf8,stroke:#0f172a,stroke-width:2px;
-    style OrganicPath fill:#4ade80,stroke:#0f172a,stroke-width:2px;
-    style TrashPath fill:#94a3b8,stroke:#0f172a,stroke-width:2px;
-    style HazardAlert fill:#f87171,stroke:#0f172a,stroke-width:2px;
-    style DropOff fill:#fbcfe8,stroke:#0f172a,stroke-width:2px;
+    TypeCheck -->|Food-Soiled Takeout / Foam #6| SoiledCheck{Accepted Locally?}
+    SoiledCheck -->|No| TrashPath
+    SoiledCheck -->|Yes| BlueBin
 ```
 
 ---
@@ -485,7 +493,7 @@ VisionX's taxonomy and contamination protocols are built on verified open resear
 
 ## 📄 License
 
-This project is licensed under the **MIT License** — see the [LICENSE](LICENSE) file for full details.
+This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) file for full details.
 
 ---
 
