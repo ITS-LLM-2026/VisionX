@@ -1,0 +1,113 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 400" width="100%" height="100%">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700;800&amp;family=JetBrains+Mono:wght@500;700&amp;display=swap');
+      .title { font-family: 'Space Grotesk', system-ui, sans-serif; font-weight: 800; font-size: 76px; fill: #0f172a; }
+      .tagline { font-family: 'Space Grotesk', system-ui, sans-serif; font-weight: 700; font-size: 24px; fill: #1e293b; }
+      .pill-text { font-family: 'JetBrains Mono', monospace; font-size: 14px; font-weight: 700; fill: #0f172a; }
+      .stat-num { font-family: 'Space Grotesk', system-ui, sans-serif; font-weight: 800; font-size: 32px; fill: #0f172a; }
+      .stat-label { font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 600; fill: #475569; letter-spacing: 1px; }
+      .grid-line { stroke: #cbd5e1; stroke-width: 1; stroke-dasharray: 4,4; }
+      .ink-border { stroke: #0f172a; stroke-width: 4; }
+      .shadow-box { filter: drop-shadow(6px 6px 0px #0f172a); }
+      .shadow-box-sm { filter: drop-shadow(4px 4px 0px #0f172a); }
+    </style>
+    
+    <!-- Halftone / Dot pattern -->
+    <pattern id="dot-pattern" x="0" y="0" width="24" height="24" patternUnits="userSpaceOnUse">
+      <circle cx="3" cy="3" r="1.5" fill="#94a3b8" opacity="0.45" />
+    </pattern>
+  </defs>
+
+  <!-- Background Base Canvas -->
+  <rect width="1200" height="400" fill="#f8fafc" />
+  <rect width="1200" height="400" fill="url(#dot-pattern)" />
+  
+  <!-- Outer Hard Ink Frame -->
+  <rect x="16" y="16" width="1168" height="368" fill="none" stroke="#0f172a" stroke-width="5" rx="8" />
+
+  <!-- Background Abstract Neo-Brutalist Geometry -->
+  <rect x="740" y="45" width="410" height="310" rx="6" fill="#fef08a" class="ink-border shadow-box" />
+  <rect x="720" y="65" width="410" height="270" rx="6" fill="#ffffff" class="ink-border" />
+  
+  <!-- Camera Bounding Box Illustration in Preview Box -->
+  <rect x="750" y="95" width="220" height="190" rx="4" fill="#f0fdf4" stroke="#22c55e" stroke-width="3" stroke-dasharray="6,4" />
+  
+  <!-- Detection Badge inside Bounding Box -->
+  <g class="shadow-box-sm" transform="translate(750, 75)">
+    <rect width="180" height="28" rx="4" fill="#0f172a" />
+    <text x="10" y="19" font-family="'JetBrains Mono', monospace" font-size="12" font-weight="700" fill="#4ade80">● RECYCLABLE (98.4%)</text>
+  </g>
+
+  <!-- Target Reticle Icon in Scanner Window -->
+  <circle cx="860" cy="190" r="45" fill="none" stroke="#0f172a" stroke-width="3" />
+  <line x1="860" y1="135" x2="860" y2="155" stroke="#0f172a" stroke-width="4" />
+  <line x1="860" y1="225" x2="860" y2="245" stroke="#0f172a" stroke-width="4" />
+  <line x1="805" y1="190" x2="825" y2="190" stroke="#0f172a" stroke-width="4" />
+  <line x1="895" y1="190" x2="915" y2="190" stroke="#0f172a" stroke-width="4" />
+  <circle cx="860" cy="190" r="6" fill="#22c55e" stroke="#0f172a" stroke-width="2" />
+
+  <!-- Bottle Icon Inside Reticle -->
+  <path d="M852 165 h16 v12 h8 v42 h-32 v-42 h8 z" fill="#38bdf8" stroke="#0f172a" stroke-width="2.5" />
+
+  <!-- Action Pill on Right -->
+  <g class="shadow-box-sm" transform="translate(980, 115)">
+    <rect width="130" height="42" rx="4" fill="#fbcfe8" stroke="#0f172a" stroke-width="3" />
+    <text x="14" y="26" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="800" fill="#0f172a">RINSE &amp; CAP ON</text>
+  </g>
+
+  <g class="shadow-box-sm" transform="translate(980, 175)">
+    <rect width="130" height="42" rx="4" fill="#bbf7d0" stroke="#0f172a" stroke-width="3" />
+    <text x="14" y="26" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="800" fill="#0f172a">PET #1 POLYMER</text>
+  </g>
+
+  <g class="shadow-box-sm" transform="translate(980, 235)">
+    <rect width="130" height="42" rx="4" fill="#fed7aa" stroke="#0f172a" stroke-width="3" />
+    <text x="14" y="26" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="800" fill="#0f172a">CURBSIDE BLUE</text>
+  </g>
+
+  <!-- Left Side: Hero Title & Content -->
+  <!-- Neo-Brutalist Tag Pill -->
+  <g class="shadow-box-sm" transform="translate(60, 60)">
+    <rect width="270" height="36" rx="4" fill="#e0e7ff" stroke="#0f172a" stroke-width="3" />
+    <text x="14" y="23" class="pill-text">AI ENVIRONMENTAL INTELLIGENCE</text>
+  </g>
+
+  <!-- Brand Title with Tactile Depth -->
+  <text x="60" y="160" class="title">VisionX</text>
+  <text x="350" y="160" font-family="'Space Grotesk', system-ui" font-size="64" font-weight="800" fill="#22c55e">👁️♻️</text>
+
+  <!-- Tagline -->
+  <text x="62" y="202" class="tagline">See it. Understand it. Dispose of it right.</text>
+
+  <text x="62" y="234" font-family="'JetBrains Mono', monospace" font-size="15" font-weight="500" fill="#475569">
+    Real-time YOLO11n object detection meets autonomous multi-tool agentic guidance.
+  </text>
+
+  <!-- Stats / Metrics Ribbon -->
+  <g transform="translate(60, 268)">
+    <!-- Box 1 -->
+    <g class="shadow-box-sm">
+      <rect width="180" height="74" rx="4" fill="#ffffff" stroke="#0f172a" stroke-width="3" />
+      <text x="16" y="38" class="stat-num">&lt; 85ms</text>
+      <text x="16" y="58" class="stat-label">EDGE INFERENCE</text>
+    </g>
+
+    <!-- Box 2 -->
+    <g class="shadow-box-sm" transform="translate(198, 0)">
+      <rect width="180" height="74" rx="4" fill="#fef9c3" stroke="#0f172a" stroke-width="3" />
+      <text x="16" y="38" class="stat-num">10 + 60</text>
+      <text x="16" y="58" class="stat-label">TACO TAXONOMIES</text>
+    </g>
+
+    <!-- Box 3 -->
+    <g class="shadow-box-sm" transform="translate(396, 0)">
+      <rect width="180" height="74" rx="4" fill="#cffafe" stroke="#0f172a" stroke-width="3" />
+      <text x="16" y="38" class="stat-num">4 TOOLS</text>
+      <text x="16" y="58" class="stat-label">STRANDS AGENT AI</text>
+    </g>
+  </g>
+
+  <!-- Corner Graphic Badge -->
+  <polygon points="1150,20 1180,20 1180,50" fill="#0f172a" />
+</svg>
